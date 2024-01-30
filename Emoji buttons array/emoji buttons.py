@@ -19,7 +19,7 @@ def load_and_resize_images(directory, size):
     return images
 
 emojis_directory = "emojis"
-image_size = 150  # Define the size of the square box
+image_size = 150 # Define the size of the square box
 emojis_images = load_and_resize_images(emojis_directory, image_size)
 
 # 2D array of buttons with emojis
