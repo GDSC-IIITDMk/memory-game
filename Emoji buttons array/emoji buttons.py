@@ -1,7 +1,6 @@
 from tkinter import *
+from tkinter.ttk import *
 import os
-from functools import partial
-
 window = Tk()
 def index_selected(index):
     print(index,"selected")
@@ -30,6 +29,7 @@ for i in range(3):
         if emojis_images:
             index = (i * 4) + j
             if index < len(emojis_images):
+                button = Button(window, image=emojis_images[index],command=lambda i=index:index_selected(i))
                 button = Button(window, width=200,height=200,padx=10,pady=10,image=emojis_images[index],command=partial(index_selected,index))
                 button.grid(row=i, column=j)
                 row.append(button)
