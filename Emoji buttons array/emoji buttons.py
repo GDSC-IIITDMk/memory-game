@@ -8,9 +8,10 @@ SCREENHEIGHT = 800
 
 root = Tk()
 root.geometry(F'{SCREENWIDTH}x{SCREENHEIGHT}')
+root.title("Memory Game")
 
 
-window = Frame(root)
+window = Frame(root,background="RED")
 
 def index_selected(index):
     print(index,"selected")
@@ -29,9 +30,11 @@ def load_and_resize_images(directory, size):
             images.append(resized_image)
     return images
 
+
 emojis_directory = "emojis"
 image_size = 150 # Define the size of the square box
 emojis_images = load_and_resize_images(emojis_directory, image_size)
+
 
 # 2D array of buttons with emojis
 blist = []
