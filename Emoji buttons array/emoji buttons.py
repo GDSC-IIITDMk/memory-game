@@ -1,6 +1,6 @@
 from tkinter import *
+from tkinter.ttk import *
 import os
-from functools import partial
 
 
 SCREENWIDTH = 1000
@@ -11,7 +11,8 @@ root.geometry(F'{SCREENWIDTH}x{SCREENHEIGHT}')
 root.title("Memory Game")
 
 
-window = Frame(root,background="RED")
+window = Frame(root)
+
 
 def index_selected(index):
     print(index,"selected")
@@ -44,7 +45,7 @@ for i in range(3):
         if emojis_images:
             index = (i * 4) + j
             if index < len(emojis_images):
-                button = Button(window, width=200,height=200,padx=10,pady=10,image=emojis_images[index],command=partial(index_selected,index))
+                button = Button(window, width=200,height=200,padx=10,pady=10,image=emojis_images[index],command=lambda i=index:index_selected(i))
                 button.grid(row=i, column=j)
                 row.append(button)
             else:
