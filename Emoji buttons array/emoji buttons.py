@@ -18,7 +18,7 @@ def load_and_resize_images(directory, size):
     return images
 
 emojis_directory = "emojis"
-image_size = 150  # Define the size of the square box
+image_size = 150 # Define the size of the square box
 emojis_images = load_and_resize_images(emojis_directory, image_size)
 
 # 2D array of buttons with emojis
@@ -30,6 +30,7 @@ for i in range(3):
             index = (i * 4) + j
             if index < len(emojis_images):
                 button = Button(window, image=emojis_images[index],command=lambda i=index:index_selected(i))
+                button = Button(window, width=200,height=200,padx=10,pady=10,image=emojis_images[index],command=partial(index_selected,index))
                 button.grid(row=i, column=j)
                 row.append(button)
             else:
