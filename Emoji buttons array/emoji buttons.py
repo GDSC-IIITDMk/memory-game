@@ -2,10 +2,21 @@ from tkinter import *
 import os
 from functools import partial
 
-window = Tk()
+
+SCREENWIDTH = 1000
+SCREENHEIGHT = 800
+
+root = Tk()
+root.geometry(F'{SCREENWIDTH}x{SCREENHEIGHT}')
+
+
+window = Frame(root)
+
 def index_selected(index):
     print(index,"selected")
     # Do something with the index
+
+
 # Function to load and resize images from the emojis directory
 def load_and_resize_images(directory, size):
     images = []
@@ -36,5 +47,11 @@ for i in range(3):
             else:
                 break  # Stop creating buttons if we run out of images
     blist.append(row)
+
+title = Label(root,text="Memory Game",font=("Consolas",30),pady=25)
+title.pack()
+
+window.pack(expand=True)
+
 
 window.mainloop()
