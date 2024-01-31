@@ -1,6 +1,7 @@
 from tkinter import*
 from tkinter.ttk import *
 import os
+import random
 
 class start(Frame):
     def __init__(self, parent, controller, **kwargs):
@@ -17,6 +18,7 @@ class level(Frame):
         self.create_buttons()
 
     def create_buttons(self):
+        random.shuffle(self.emojis_images)
         blist = []
         for i in range(3):
             row = []

@@ -1,6 +1,6 @@
 from tkinter import *
-from tkinter.ttk import *
-import os
+# from tkinter.ttk import * //the parameters like padx pady aren't recognised while using this
+import os,random
 
 
 SCREENWIDTH = 1000
@@ -32,11 +32,12 @@ def load_and_resize_images(directory, size):
     return images
 
 
-emojis_directory = "emojis"
+emojis_directory = "emojis" #using absolute path
 image_size = 150 # Define the size of the square box
 emojis_images = load_and_resize_images(emojis_directory, image_size)
 
 
+random.shuffle(emojis_images) #shuffles the images in emojis directory
 # 2D array of buttons with emojis
 blist = []
 for i in range(3):
