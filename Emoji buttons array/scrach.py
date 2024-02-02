@@ -39,10 +39,11 @@ class level(Frame):
         super().__init__(parent, **kwargs)
         self.emojifr = Frame(self)
         self.emojifr.pack(anchor=CENTER, expand=True, fill=BOTH)
-        emojis_directory = "emojis"
-        image_size = 150
-        self.emojis_images = self.load_and_resize_images(emojis_directory, image_size)
+        self.emojis_directory = "emojis"
+        self.image_size = 150
+        self.emojis_images = self.load_and_resize_images(self.emojis_directory, self.image_size)
         self.create_buttons()
+        self.selected_imgs=[]
 
     def create_buttons(self):
         random.shuffle(self.emojis_images)
@@ -53,7 +54,7 @@ class level(Frame):
                 if self.emojis_images:
                     index = (i * 4) + j
                     if index < len(self.emojis_images):
-                        button = Button(self.emojifr, image=self.emojis_images[index], command=lambda i=index: self.index_selected(i))
+                        button = Button(self.emojifr, image=self.emojis_images[index][0], command=lambda i=self.emojis_images[index][1]: self.index_selected(i))
                         button.grid(row=i, column=j)
                         row.append(button)
                     else:
@@ -68,11 +69,21 @@ class level(Frame):
                 image = PhotoImage(file=image_path)
                 # Resize the image to a square box
                 resized_image = image.subsample(image.width() // size, image.height() // size)
-                images.append(resized_image)
+                images.append([resized_image,str(filename)])
         return images
 
     def index_selected(self, index):
         print(index, "selected")
+        if index not in self.selected_imgs:
+            self.selected_imgs.append(index)
+            self.emojis_images = self.load_and_resize_images(self.emojis_directory, self.image_size)
+            self.create_buttons()
+            self.update()
+        elif (len(self.selected_imgs)==12):
+            print("you won")
+        else:
+            print("OUT")
+
 
 class window(Tk):
     def __init__(self, *args, **kwargs):
