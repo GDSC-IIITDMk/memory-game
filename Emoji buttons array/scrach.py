@@ -33,10 +33,10 @@ class start(Frame):
     def start_game(self,parent,controller):
         controller.fup(controller.level,controller.intro)
 
-
 class level(Frame):
     def __init__(self, parent, controller, **kwargs):
         super().__init__(parent, **kwargs)
+        self.cont=controller
         self.emojifr = Frame(self)
         self.emojifr.pack(anchor=CENTER, expand=True, fill=BOTH)
         self.emojis_directory = "emojis"
@@ -81,9 +81,27 @@ class level(Frame):
             self.update()
         elif (len(self.selected_imgs)==12):
             print("you won")
+            self.cont.fup(self.cont.end, self.cont.level)
+            self.cont.end.start(1, 0 ,self.selected_imgs)
+
         else:
             print("OUT")
+            self.cont.fup(self.cont.end, self.cont.level)
+            self.cont.end.start(0,index,self.selected_imgs)
 
+class End(Frame):
+    def __init__(self, parent, controller, **kwargs):
+        super().__init__(parent, **kwargs)
+    def start(self,result,wrong,selected_list=list(),**kwargs):
+        self.lostfr=Frame(self).pack()
+        res=StringVar()
+        if result:
+            res.set("Great")
+        else:
+            res.set("Well Try")
+        lostlab=Label(self.lostfr,text=res.get(),font=("Verdana", 34))
+        lostlab.pack()
+        self.selected_grid=Frame(self).pack()
 
 class window(Tk):
     def __init__(self, *args, **kwargs):
@@ -92,6 +110,7 @@ class window(Tk):
         box.pack(fill=BOTH, expand=1)
         self.intro=start(box,self)
         self.level= level(box, self)
+        self.end=End(box,self)
         self.start=start(box,self)
         self.title('Memory Game')
         self.fup(self.intro)
