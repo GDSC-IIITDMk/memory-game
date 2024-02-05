@@ -33,16 +33,17 @@ class start(Frame):
     def start_game(self,parent,controller):
         controller.fup(controller.level,controller.intro)
 
-
 class level(Frame):
     def __init__(self, parent, controller, **kwargs):
         super().__init__(parent, **kwargs)
+        self.cont=controller
         self.emojifr = Frame(self)
         self.emojifr.pack(anchor=CENTER, expand=True, fill=BOTH)
-        emojis_directory = "emojis"
-        image_size = 150
-        self.emojis_images = self.load_and_resize_images(emojis_directory, image_size)
+        self.emojis_directory = "emojis"
+        self.image_size = 150
+        self.emojis_images = self.load_and_resize_images(self.emojis_directory, self.image_size)
         self.create_buttons()
+        self.selected_imgs=[]
 
     def create_buttons(self):
         random.shuffle(self.emojis_images)
@@ -53,7 +54,7 @@ class level(Frame):
                 if self.emojis_images:
                     index = (i * 4) + j
                     if index < len(self.emojis_images):
-                        button = Button(self.emojifr, image=self.emojis_images[index], command=lambda i=index: self.index_selected(i))
+                        button = Button(self.emojifr, image=self.emojis_images[index][0], command=lambda i=self.emojis_images[index][1]: self.index_selected(i))
                         button.grid(row=i, column=j)
                         row.append(button)
                     else:
@@ -68,11 +69,39 @@ class level(Frame):
                 image = PhotoImage(file=image_path)
                 # Resize the image to a square box
                 resized_image = image.subsample(image.width() // size, image.height() // size)
-                images.append(resized_image)
+                images.append([resized_image,str(filename)])
         return images
 
     def index_selected(self, index):
         print(index, "selected")
+        if index not in self.selected_imgs:
+            self.selected_imgs.append(index)
+            self.emojis_images = self.load_and_resize_images(self.emojis_directory, self.image_size)
+            self.create_buttons()
+            self.update()
+        elif (len(self.selected_imgs)==12):
+            print("you won")
+            self.cont.fup(self.cont.end, self.cont.level)
+            self.cont.end.start(1, 0 ,self.selected_imgs)
+
+        else:
+            print("OUT")
+            self.cont.fup(self.cont.end, self.cont.level)
+            self.cont.end.start(0,index,self.selected_imgs)
+
+class End(Frame):
+    def __init__(self, parent, controller, **kwargs):
+        super().__init__(parent, **kwargs)
+    def start(self,result,wrong,selected_list=list(),**kwargs):
+        self.lostfr=Frame(self).pack()
+        res=StringVar()
+        if result:
+            res.set("Great")
+        else:
+            res.set("Well Try")
+        lostlab=Label(self.lostfr,text=res.get(),font=("Verdana", 34))
+        lostlab.pack()
+        self.selected_grid=Frame(self).pack()
 
 class window(Tk):
     def __init__(self, *args, **kwargs):
@@ -81,6 +110,7 @@ class window(Tk):
         box.pack(fill=BOTH, expand=1)
         self.intro=start(box,self)
         self.level= level(box, self)
+        self.end=End(box,self)
         self.start=start(box,self)
         self.title('Memory Game')
         self.fup(self.intro)
