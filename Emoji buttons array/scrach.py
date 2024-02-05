@@ -74,16 +74,16 @@ class level(Frame):
 
     def index_selected(self, index):
         print(index, "selected")
-        if index not in self.selected_imgs:
-            self.selected_imgs.append(index)
-            self.emojis_images = self.load_and_resize_images(self.emojis_directory, self.image_size)
-            self.create_buttons()
-            self.update()
-        elif (len(self.selected_imgs)==12):
-            print("you won")
-            self.cont.fup(self.cont.end, self.cont.level)
-            self.cont.end.start(1, 0 ,self.selected_imgs)
-
+        if index not in self.selected_imgs :
+            if (len(self.selected_imgs)==11):
+                print("you won")
+                self.cont.fup(self.cont.end, self.cont.level)
+                self.cont.end.start(1, 0 ,self.selected_imgs)
+            else:
+                self.selected_imgs.append(index)
+                self.emojis_images = self.load_and_resize_images(self.emojis_directory, self.image_size)
+                self.create_buttons()
+                self.update()
         else:
             print("OUT")
             self.cont.fup(self.cont.end, self.cont.level)
@@ -92,17 +92,33 @@ class level(Frame):
 class End(Frame):
     def __init__(self, parent, controller, **kwargs):
         super().__init__(parent, **kwargs)
+        self.cont = controller
+        self.res = StringVar()
+        self.lostfr=Frame(self).pack(anchor="s")
+        self.selected_grid=Frame(self).pack(anchor="s")
     def start(self,result,wrong,selected_list=list(),**kwargs):
-        self.lostfr=Frame(self).pack()
-        res=StringVar()
         if result:
-            res.set("Great")
+            self.res.set("Great")
         else:
-            res.set("Well Try")
-        lostlab=Label(self.lostfr,text=res.get(),font=("Verdana", 34))
-        lostlab.pack()
-        self.selected_grid=Frame(self).pack()
+            self.res.set("Well Try")
 
+        lostlab = Label(self.lostfr, text=self.res.get(), font=("Verdana", 34))
+        lostlab.pack(anchor="n")
+        self.emojis_images=self.cont.level.emojis_images
+        blist = []
+        for i in range(3):
+            row = []
+            for j in range(4):
+                if self.emojis_images:
+                    index = (i * 4) + j
+                    if index < len(self.emojis_images):
+                        selectedlab = Label(self.selected_grid, image=self.emojis_images[index][0])
+                        selectedlab.pack()
+                        row.append(selectedlab)
+                    else:
+                        break  # Stop creating buttons if we run out of images
+            blist.append(row)
+        self.update()
 class window(Tk):
     def __init__(self, *args, **kwargs):
         Tk.__init__(self, **kwargs)
@@ -125,4 +141,5 @@ class window(Tk):
             self.intro.vidcanvas.config(height=400, width=600)
             self.update()
 game=window()
+game.resizable(False, False)
 game.mainloop()
